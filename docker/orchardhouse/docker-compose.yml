@@ -1,0 +1,14 @@
+version: '2'
+
+services:  
+  home-assistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant
+    restart: always
+    network_mode: "host"
+    volumes:
+      - hoem-assistant-config:/config
+      - /etc/localtime:/etc/localtime
+
+volumes:
+  home-assistant-config:
