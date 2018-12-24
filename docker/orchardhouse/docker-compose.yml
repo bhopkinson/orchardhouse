@@ -7,8 +7,88 @@ services:
     restart: always
     network_mode: "host"
     volumes:
-      - hoem-assistant-config:/config
+      - home-assistant-config:/config:z
       - /etc/localtime:/etc/localtime
+
+  mariadb:
+    container_name: mysql
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  mqtt:
+    container_name: MQTT
+    image: eclipse-mosquitto
+    restart: always
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes: 
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+      - mosquitto:/mosquitto:z
+
+  node-red:
+    container_name: node-red
+    image: bjh101/node-red
+    restart: always
+    ports:
+      - 1880:1880
+    volumes:
+      - node-red:/data
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  docker-webhooks:
+    container_name: webhooks
+    image: bjh101/docker-webhooks
+    ports:
+      - 9002:9000
+    volumes:
+      - home-assistant-config:/hass-config:z
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  filebrowser-mqtt:
+    container_name: filebrowser-mqtt
+    image: filebrowser/filebrowser
+    ports:
+      - 9003:80
+    volumes:
+      - mosquitto:/srv:z
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  organizr:
+    container_name: organizr
+    image: lsiocommunity/organizr
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - organizr:/config
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  watchtower:
+    container_name: watchtower
+    image: v2tec/watchtower
+    command: --interval 30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   home-assistant-config:
+    driver: local
+  mosquitto:
+    driver: local
+  mysql:
+    driver: local
+  organizr:
+    driver: local
+  node-ref:
+    driver: local
