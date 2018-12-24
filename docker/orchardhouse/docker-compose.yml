@@ -39,7 +39,7 @@ services:
     ports:
       - 1880:1880
     volumes:
-      - node-red:/data
+      - node-red:/data:z
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
@@ -53,13 +53,14 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
-  filebrowser-mqtt:
-    container_name: filebrowser-mqtt
+  filebrowser:
+    container_name: filebrowser
     image: filebrowser/filebrowser
     ports:
       - 9003:80
     volumes:
-      - mosquitto:/srv:z
+      - mosquitto:/srv/mosquitto:z
+      - node-red:/srv/node-red:z
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
