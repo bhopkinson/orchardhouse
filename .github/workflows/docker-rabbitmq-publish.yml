@@ -6,14 +6,16 @@ name: docker-rabbitmq-publish
 # documentation.
 
 on:
-  schedule:
-    - cron: '15 8 * * *'
   push:
     branches: [ "master" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
+    paths:
+      - 'docker/rabbitmq'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'docker/rabbitmq'
 
 env:
   # Use docker.io for Docker Hub if empty
