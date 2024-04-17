@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: orchardhouse/rabbitmq:management
+    container_name: rabbitmq
+    env_file:
+      - stack.env
+    ports:
+      - "1883:1883"
+      - "5672:5672"
+      - "15672:15672"
+      - "15675:15675"
+
+networks:
+  default:
+    driver: bridge
