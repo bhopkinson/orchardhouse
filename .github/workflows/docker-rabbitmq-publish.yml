@@ -7,14 +7,14 @@ name: docker-rabbitmq-publish
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
     paths:
       - 'docker/rabbitmq/**'
       - '.github/workflows/docker-rabbitmq-publish.yml'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     paths:
       - 'docker/rabbitmq/**'
       - '.github/workflows/docker-rabbitmq-publish.yml'
