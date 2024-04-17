@@ -5,7 +5,7 @@ services:
     image: orchardhouse/rabbitmq:management
     container_name: rabbitmq
     env_file:
-      - stack.env
+      - ../../stack.env
     ports:
       - "1883:1883"
       - "5672:5672"
