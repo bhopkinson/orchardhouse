@@ -2,7 +2,7 @@ version: '3'
 
 services:
   rabbitmq:
-    image: orchardhouse-rabbitmq:main
+    image: bhopkinson/orchardhouse/rabbitmq:main
     container_name: rabbitmq
     env_file:
       - ../../stack.env
