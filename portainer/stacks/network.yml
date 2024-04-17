@@ -4,6 +4,7 @@ services:
   traefik:
     image: traefik:v2.11
     container_name: "traefik"
+    restart: always
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -18,6 +19,7 @@ services:
   whoami:
     image: "traefik/whoami"
     container_name: "whoami"
+    restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"

@@ -4,6 +4,7 @@ services:
   rabbitmq:
     image: ghcr.io/bhopkinson/orchardhouse-rabbitmq:main
     container_name: rabbitmq
+    restart: always
     env_file:
       - ../../stack.env
     ports:
