@@ -40,6 +40,13 @@ services:
         hard: 8192
     stop_grace_period: 60s
     network_mode: host
+    ports:
+      - "8088:8088"
+      - "8043:8043"
+      - "8843:8843"
+      - "27001:27001/udp"
+      - "29810:29810/udp"
+      - "29811-29816:29811-29816"
     volumes:
       - omada-data:/opt/tplink/EAPController/data
       - omada-logs:/opt/tplink/EAPController/logs
