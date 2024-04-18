@@ -30,6 +30,20 @@ services:
       - SUBDOMAINS=$DUCKDNS_SUBDOMAINS
       - TOKEN=$DUCKDNS_TOKEN
 
+  omada-controller:
+    image: mbentley/omada-controller:5.13
+    container_name: "omada-controller"
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    stop_grace_period: 60s
+    network_mode: host
+    volumes:
+      - omada-data:/opt/tplink/EAPController/data
+      - omada-logs:/opt/tplink/EAPController/logs
+
   whoami:
     image: "traefik/whoami"
     container_name: "whoami"
@@ -38,3 +52,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
       - "traefik.http.routers.whoami.entrypoints=web"
+
+volumes:
+  omada-data:
+  omada-logs:
