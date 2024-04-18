@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   traefik:
@@ -10,10 +10,24 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
+      - "--entrypoints.websecure.http.tls.certresolver=myresolver"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
+      - "--certificatesresolvers.myresolver.acme.email=$EMAIL"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--log.level=DEBUG"
+    environment:
+      - "DUCKDNS_TOKEN=$DUCKDNS_TOKEN"
     ports:
       - "80:80"
-      - "8080:8080"
+      - "443:443"
     volumes:
+      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
       - "traefik.enable=true"
