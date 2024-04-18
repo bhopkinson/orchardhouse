@@ -62,6 +62,10 @@ services:
     volumes:
       - omada-data:/opt/tplink/EAPController/data
       - omada-logs:/opt/tplink/EAPController/logs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`omada.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
 
   whoami:
     image: "traefik/whoami"
