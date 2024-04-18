@@ -36,13 +36,13 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
 
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: "duckdns"
-    restart: unless-stopped
-    environment:
-      - SUBDOMAINS=$DUCKDNS_SUBDOMAINS
-      - TOKEN=$DUCKDNS_TOKEN
+  # duckdns:
+  #   image: lscr.io/linuxserver/duckdns:latest
+  #   container_name: "duckdns"
+  #   restart: unless-stopped
+  #   environment:
+  #     - SUBDOMAINS=$DUCKDNS_SUBDOMAINS
+  #     - TOKEN=$DUCKDNS_TOKEN
 
   omada-controller:
     image: mbentley/omada-controller:5.13
