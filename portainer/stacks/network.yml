@@ -65,7 +65,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`omada.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.omada-controller.entrypoints=web"
+      - "traefik.http.services.omada-controller.loadbalancer.server.port"
 
   whoami:
     image: "traefik/whoami"
