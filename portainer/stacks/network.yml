@@ -117,6 +117,14 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
       - "traefik.http.routers.whoami.entrypoints=web"
 
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name:  cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+
 volumes:
   omada-data:
   omada-logs:
