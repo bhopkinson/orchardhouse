@@ -93,8 +93,8 @@ services:
       - "traefik.http.routers.whoami.entrypoints=web"
 
   cloudflared:
-    image:  cloudflared
     image: cloudflare/cloudflared
+    container_name:  cloudflared
     restart: unless-stopped
     command: tunnel run
     environment:
