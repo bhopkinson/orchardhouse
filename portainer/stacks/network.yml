@@ -37,6 +37,23 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
 
+  cloudflare-companion:
+    image: tiredofit/traefik-cloudflare-companion
+    container_name: cloudflare-companion
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TIMEZONE=Europe/London
+      - LOG_TYPE=CONSOLE
+      - LOG_LEVEL=INFO
+      - RC_TYPE=CNAME
+      - TARGET_DOMAIN=${DOMAIN}
+      - REFRESH_ENTRIES=TRUE
+      - DOMAIN1=${DOMAIN}
+      - DOMAIN1_ZONE_ID=${DOMAIN_CLOUDFLARE_ZONE_ID}
+      - DOMAIN1_PROXIED=TRUE
+    restart: unless-stopped
+
   # duckdns:
   #   image: lscr.io/linuxserver/duckdns:latest
   #   container_name: "duckdns"
