@@ -37,6 +37,14 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
 
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name:  cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+
   cloudflare-companion:
     image: tiredofit/traefik-cloudflare-companion
     container_name: cloudflare-companion
