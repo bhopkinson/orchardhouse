@@ -22,14 +22,19 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
+    networks:
+      - traefik
+      - cloudflared
 
   cloudflared:
     image: cloudflare/cloudflared
-    container_name:  cloudflared
+    container_name: cloudflared
     restart: unless-stopped
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    networks:
+      - cloudflared
 
   cloudflare-companion:
     image: tiredofit/traefik-cloudflare-companion
@@ -95,7 +100,13 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
       - "traefik.http.routers.whoami.entrypoints=web"
+    networks:
+      - traefik
 
 volumes:
   omada-data:
   omada-logs:
+
+networks:
+  traefik:
+  cloudflared:
