@@ -6,27 +6,15 @@ services:
     container_name: "traefik"
     restart: unless-stopped
     command:
+      # - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      # - "--entrypoints.websecure.address=:443"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      # - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
-      # - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
-      # - "--entrypoints.websecure.http.tls.certresolver=myresolver"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
-      # - "--certificatesresolvers.myresolver.acme.email=$EMAIL"
-      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--log.level=DEBUG"
     ports:
       - "80:80"
-      - "443:443"
       - "8080:8080"
     volumes:
-      - letsencrypt:/letsencrypt
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
       - "traefik.enable=true"
@@ -111,4 +99,3 @@ services:
 volumes:
   omada-data:
   omada-logs:
-  letsencrypt:
