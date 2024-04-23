@@ -21,8 +21,6 @@ services:
       # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--log.level=DEBUG"
-    environment:
-      - "DUCKDNS_TOKEN=$DUCKDNS_TOKEN"
     ports:
       - "80:80"
       - "443:443"
@@ -62,14 +60,6 @@ services:
       - DOMAIN1_ZONE_ID=${DOMAIN_CLOUDFLARE_ZONE_ID}
       - DOMAIN1_PROXIED=TRUE
     restart: unless-stopped
-
-  # duckdns:
-  #   image: lscr.io/linuxserver/duckdns:latest
-  #   container_name: "duckdns"
-  #   restart: unless-stopped
-  #   environment:
-  #     - SUBDOMAINS=$DUCKDNS_SUBDOMAINS
-  #     - TOKEN=$DUCKDNS_TOKEN
 
   omada-controller:
     image: mbentley/omada-controller:5.13
