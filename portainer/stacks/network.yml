@@ -24,7 +24,6 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
     networks:
       - traefik
-      - cloudflared
 
   cloudflared:
     image: cloudflare/cloudflared
