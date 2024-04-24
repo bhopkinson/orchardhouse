@@ -24,6 +24,7 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
     networks:
       - traefik
+      - cloudflared
 
   cloudflared:
     image: cloudflare/cloudflared
@@ -99,8 +100,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
       - "traefik.http.routers.whoami.entrypoints=web"
-    networks:
-      - traefik
 
 volumes:
   omada-data:
