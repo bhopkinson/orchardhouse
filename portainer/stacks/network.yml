@@ -22,7 +22,7 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
       # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      - "traefik.http.middlewares.auth.forwardauth.address=forward-auth"
+      - "traefik.http.middlewares.auth.forwardauth.address=forward-auth:4181"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     networks:
@@ -76,13 +76,13 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.entrypoints=web"
       - "traefik.http.routers.auth.rule=Host(`auth.$DOMAIN`)"
+      - "traefik.http.services.auth.loadbalancer.server.port=4181"
       # - "traefik.http.middlewares.auth-https-redirect.redirectscheme.scheme=https"
       # - "traefik.http.routers.auth.middlewares=auth-https-redirect"
       # - "traefik.http.routers.auth-secure.entrypoints=https"
       # - "traefik.http.routers.auth-secure.rule=Host(`aad.[subdomain.example.com]`)"
       # - "traefik.http.routers.auth-secure.tls=true"
       # - "traefik.http.routers.auth-secure.service=auth"
-      # - "traefik.http.services.auth.loadbalancer.server.port=4181"
       # - "traefik.docker.network=traefik"
     restart: unless-stopped
 
