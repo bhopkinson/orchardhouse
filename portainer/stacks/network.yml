@@ -11,6 +11,9 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.web.address=:443"
       - "--entrypoints.web.http.middlewares=traefik-forward-auth"
     ports:
       - "80:80"
@@ -71,7 +74,7 @@ services:
       - PROVIDERS_OIDC_CLIENT_ID=$OIDC_CLIENT_ID
       - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
       - COOKIE_DOMAIN=$DOMAIN
-      - AUTH_HOST=auth.$DOMAIN
+      - AUTH_HOST="https://auth.$DOMAIN"
       - SECRET=$FORWARD_AUTH_SECRET
       - LOG_LEVEL=debug
     labels:
@@ -135,6 +138,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
+      - "traefik.http.routers.external.entrypoints=websecure"
+      - "traefik.http.routers.external.tls=true"
     networks:
       - traefik
 
