@@ -11,15 +11,26 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # - "--entrypoints.web.address=:443"
-      - "--entrypoints.web.http.middlewares=traefik-forward-auth"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
+      - "--entrypoints.websecure.http.tls.certresolver=default"
+      #- "--entrypoints.websecure.http.tls.certresolver=myresolver"
+      - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
+      #- "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      #- "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
+      #- "--certificatesresolvers.myresolver.acme.email=$EMAIL"
+      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--"
     ports:
       - "80:80"
       - "8080:8080"
+      - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - letsencrypt:/letsencrypt
     labels:
       - "traefik.enable=true"
       # - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
@@ -147,6 +158,7 @@ services:
 volumes:
   omada-data:
   omada-logs:
+  letsencrypt:
 
 networks:
   traefik:
