@@ -12,22 +12,23 @@ services:
       - "--providers.docker.exposedbydefault=false"
       # Insecure lister, redirect to TLS
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.websecure.address=:443"
-      # TLS configuration
-      - "--entrypoints.websecure.http.tls=true"
-      - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
-      - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
-      #- "--entrypoints.websecure.http.tls.certresolver=default"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
-      # LetsEncrypt
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.letsencrypt.acme.email=$EMAIL"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--entrypoints.web.http.middlewares=traefik-forward-auth"
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.websecure.address=:443"
+      # # TLS configuration
+      # - "--entrypoints.websecure.http.tls=true"
+      # - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
+      # - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
+      # #- "--entrypoints.websecure.http.tls.certresolver=default"
+      # - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      # - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
+      # # LetsEncrypt
+      # - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      # - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      # - "--certificatesresolvers.letsencrypt.acme.email=$EMAIL"
+      # - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "8080:8080"
@@ -156,8 +157,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
-      - "traefik.http.routers.external.entrypoints=websecure"
-      - "traefik.http.routers.external.tls=true"
+      # - "traefik.http.routers.external.entrypoints=websecure"
+      # - "traefik.http.routers.external.tls=true"
     networks:
       - traefik
 
