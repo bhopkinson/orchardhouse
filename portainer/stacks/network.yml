@@ -13,14 +13,14 @@ services:
       # Insecure lister, redirect to TLS
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.middlewares=traefik-forward-auth"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # - "--entrypoints.websecure.address=:443"
-      # # TLS configuration
-      # - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      # TLS configuration
+      - "--entrypoints.websecure.http.tls=true"
       # - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
       # - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
-      # #- "--entrypoints.websecure.http.tls.certresolver=default"
+      - "--entrypoints.websecure.http.tls.certresolver=default"
       # - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
       # - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
       # # LetsEncrypt
