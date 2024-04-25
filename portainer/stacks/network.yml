@@ -71,14 +71,14 @@ services:
       - PROVIDERS_OIDC_CLIENT_ID=$OIDC_CLIENT_ID
       - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
       - COOKIE_DOMAIN=$DOMAIN
-      - AUTH_HOST=auth.orchardhouse.cc
+      - AUTH_HOST=auth.$DOMAIN
       - SECRET=$FORWARD_AUTH_SECRET
       - LOG_LEVEL=debug
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-forward-auth.entrypoints=web"
       - "traefik.http.routers.traefik-forward-auth.rule=Host(`auth.$DOMAIN`)"
-      - "traefik.http.services.traefik-auth.loadbalancer.server.port=4181"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
@@ -136,8 +136,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
-      - "traefik.http.routers.whoami.middlewares=auth"
     networks:
       - traefik
 
