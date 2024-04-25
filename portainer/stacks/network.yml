@@ -22,7 +22,7 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
       # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      - "traefik.http.middlewares.auth.forwardauth.address=forward-auth:4181"
+      - "traefik.http.middlewares.auth.forwardauth.address=http://forward-auth:4181"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     networks:
