@@ -40,8 +40,7 @@ services:
       # - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       # - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     environment:
-      - "CF_API_EMAIL=$CLOUDFARE_API_EMAIL"
-      - "CF_API_KEY=$CLOUDFARE_DNS_API_TOKEN"
+      - "CLOUDFLARE_DNS_API_TOKEN=$CLOUDFARE_DNS_API_TOKEN"
     networks:
       - traefik
       - cloudflared
