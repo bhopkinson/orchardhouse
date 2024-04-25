@@ -18,12 +18,11 @@ services:
       - "--entrypoints.websecure.http.tls.certresolver=default"
       #- "--entrypoints.websecure.http.tls.certresolver=myresolver"
       - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
-      #- "--certificatesresolvers.myresolver.acme.dnschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
-      #- "--certificatesresolvers.myresolver.acme.email=$EMAIL"
-      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.myresolver.acme.email=$EMAIL"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "8080:8080"
@@ -40,6 +39,9 @@ services:
       # - "traefik.http.middlewares.auth.forwardauth.address=http://forward-auth:4181"
       # - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       # - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+    environment:
+      - "CF_API_EMAIL=$CF_API_EMAIL"
+      - "CF_API_KEY=$CLOUDFARE_DNS_API_TOKEN"
     networks:
       - traefik
       - cloudflared
@@ -64,7 +66,7 @@ services:
       - LOG_TYPE=CONSOLE
       - LOG_LEVEL=INFO
       - RC_TYPE=CNAME
-      - CF_TOKEN=${CLOUDFLARE_COMPANION_CF_TOKEN}
+      - CF_TOKEN=${CLOUDFARE_DNS_API_TOKEN}
       - TARGET_DOMAIN=${DOMAIN}
       - REFRESH_ENTRIES=TRUE
       - DOMAIN1=${DOMAIN}
