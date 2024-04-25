@@ -71,7 +71,7 @@ services:
       - PROVIDERS_OIDC_CLIENT_ID=$OIDC_CLIENT_ID
       - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
       - COOKIE_DOMAIN=$DOMAIN
-      - AUTH_HOST=auth.$DOMAIN
+      - AUTH_HOST=https://auth.$DOMAIN
       - SECRET=$FORWARD_AUTH_SECRET
       - LOG_LEVEL=debug
     labels:
