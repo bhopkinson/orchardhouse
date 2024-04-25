@@ -54,6 +54,34 @@ services:
       - DOMAIN1_PROXIED=TRUE
     restart: unless-stopped
 
+  forward-auth:
+    container_name: forward-auth
+    image: thomseddon/traefik-forward-auth:latest
+    depends_on:
+      - traefik
+    networks:
+      - traefik
+    environment:
+      - DEFAULT_PROVIDER=oidc
+      - PROVIDERS_OIDC_ISSUER_URL=$OIDC_ISSUER_URL
+      - PROVIDERS_OIDC_CLIENT_ID=$OIDC_CLIENT_ID
+      - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
+      - COOKIE_DOMAIN=$DOMAIN
+      - LOG_LEVEL=debug
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.entrypoints=web"
+      - "traefik.http.routers.auth.rule=Host(`auth.$DOMAIN`)"
+      # - "traefik.http.middlewares.auth-https-redirect.redirectscheme.scheme=https"
+      # - "traefik.http.routers.auth.middlewares=auth-https-redirect"
+      # - "traefik.http.routers.auth-secure.entrypoints=https"
+      # - "traefik.http.routers.auth-secure.rule=Host(`aad.[subdomain.example.com]`)"
+      # - "traefik.http.routers.auth-secure.tls=true"
+      # - "traefik.http.routers.auth-secure.service=auth"
+      # - "traefik.http.services.auth.loadbalancer.server.port=4181"
+      # - "traefik.docker.network=traefik"
+    restart: unless-stopped
+
   omada-controller:
     image: mbentley/omada-controller:5.13
     container_name: "omada-controller"
