@@ -10,43 +10,30 @@ services:
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      # Insecure lister, redirect to TLS
+      # Listeners
       - "--entrypoints.web.address=:80"
-      # - "--entrypoints.web.http.middlewares=traefik-forward-auth"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       # TLS configuration
       - "--entrypoints.websecure.http.tls=true"
-      # - "--entrypoints.websecure.http.tls.domains[0].main=$DOMAIN"
-      # - "--entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN"
       - "--entrypoints.websecure.http.tls.certresolver=default"
-      # - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
       - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
-      # # LetsEncrypt
-      # - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      # - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
-      # - "--certificatesresolvers.letsencrypt.acme.email=$EMAIL"
-      # - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "8080:8080"
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - letsencrypt:/letsencrypt
     labels:
-      - "traefik.enable=true"
+      # - "traefik.enable=true"
       # - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       # - "traefik.http.routers.dashboard.service=api@internal"
       # - "traefik.http.routers.dashboard.middlewares=forward-auth"
       # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      - "traefik.http.middlewares.auth.forwardauth.address=http://traefik-forward-auth:4181"
-      - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
-    environment:
-      - "CLOUDFLARE_DNS_API_TOKEN=$CLOUDFARE_DNS_API_TOKEN"
+      # - "traefik.http.middlewares.auth.forwardauth.address=http://traefik-forward-auth:4181"
+      # - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
+      # - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     networks:
       - traefik
       - cloudflared
@@ -93,7 +80,6 @@ services:
       - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
       - COOKIE_DOMAIN=$DOMAIN
       - AUTH_HOST=auth.$DOMAIN
-      # - INSECURE_COOKIE=true
       - SECRET=$FORWARD_AUTH_SECRET
       - LOG_LEVEL=debug
     labels:
@@ -103,13 +89,6 @@ services:
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
-      # - "traefik.http.middlewares.auth-https-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.routers.auth.middlewares=auth-https-redirect"
-      # - "traefik.http.routers.auth-secure.entrypoints=https"
-      # - "traefik.http.routers.auth-secure.rule=Host(`aad.[subdomain.example.com]`)"
-      # - "traefik.http.routers.auth-secure.tls=true"
-      # - "traefik.http.routers.auth-secure.service=auth"
-      # - "traefik.docker.network=traefik"
     restart: unless-stopped
 
   omada-controller:
@@ -157,8 +136,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
-      # - "traefik.http.routers.external.entrypoints=websecure"
-      # - "traefik.http.routers.external.tls=true"
     networks:
       - traefik
 
