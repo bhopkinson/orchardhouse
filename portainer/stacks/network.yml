@@ -125,8 +125,7 @@ services:
       - omada-logs:/opt/tplink/EAPController/logs
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`omada.localhost`)"
-      - "traefik.http.routers.omada-controller.entrypoints=web"
+      - "traefik.http.routers.dashboard.rule=Host(`omada.$DOMAIN`)"
       - "traefik.http.services.omada-controller.loadbalancer.server.port=8088"
 
   whoami:
