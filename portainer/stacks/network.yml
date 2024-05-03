@@ -42,7 +42,7 @@ services:
       # - "traefik.http.routers.dashboard.service=api@internal"
       # - "traefik.http.routers.dashboard.middlewares=forward-auth"
       # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      - "traefik.http.middlewares.auth.forwardauth.address=http://forward-auth:4181"
+      - "traefik.http.middlewares.auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     environment:
@@ -100,7 +100,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-forward-auth.rule=Host(`auth.$DOMAIN`)"
       - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
-      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      #- "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
       # - "traefik.http.middlewares.auth-https-redirect.redirectscheme.scheme=https"
