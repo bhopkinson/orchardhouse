@@ -42,9 +42,9 @@ services:
       # - "traefik.http.routers.dashboard.service=api@internal"
       # - "traefik.http.routers.dashboard.middlewares=forward-auth"
       # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      # - "traefik.http.middlewares.auth.forwardauth.address=http://forward-auth:4181"
-      # - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      # - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.middlewares.auth.forwardauth.address=http://forward-auth:4181"
+      - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
     environment:
       - "CLOUDFLARE_DNS_API_TOKEN=$CLOUDFARE_DNS_API_TOKEN"
     networks:
@@ -93,7 +93,7 @@ services:
       - PROVIDERS_OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
       - COOKIE_DOMAIN=$DOMAIN
       - AUTH_HOST=auth.$DOMAIN
-      - INSECURE_COOKIE=true
+      # - INSECURE_COOKIE=true
       - SECRET=$FORWARD_AUTH_SECRET
       - LOG_LEVEL=debug
     labels:
