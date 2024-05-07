@@ -11,7 +11,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       # Listeners
-      - "--entrypoints.web.address=:80"
+      # - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
