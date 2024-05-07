@@ -25,15 +25,10 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    #labels:
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      # - "traefik.http.routers.dashboard.service=api@internal"
-      # - "traefik.http.routers.dashboard.middlewares=forward-auth"
-      # - "traefik.http.middlewares.auth.basicauth.users=$TRAEFIK_USER_PASS"
-      # - "traefik.http.middlewares.auth.forwardauth.address=http://traefik-forward-auth:4181"
-      # - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      # - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+    labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.dashboard.rule=Host(`traefik.$DOMAIN`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+       - "traefik.http.routers.dashboard.service=api@internal"
     networks:
       - traefik
       - cloudflared
