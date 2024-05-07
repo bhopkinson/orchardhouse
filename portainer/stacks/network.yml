@@ -18,7 +18,7 @@ services:
       # TLS configuration
       - "--entrypoints.websecure.http.tls=true"
       - "--entrypoints.websecure.http.tls.certresolver=default"
-      - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
+      # - "--entrypoints.websecure.http.middlewares=traefik-forward-auth"
     ports:
       - "80:80"
       - "8080:8080"
@@ -132,6 +132,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
+      - "traefik.http.routers.whoami.middlewares=traefik-forward-auth"
     networks:
       - traefik
 
