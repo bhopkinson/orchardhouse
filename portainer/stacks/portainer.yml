@@ -15,8 +15,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.$DOMAIN`)"
+      - "traefik.http.routers.portainer.priority=1"
       - "traefik.http.routers.portainer.middlewares=traefik-forward-auth"
-      - "traefik.http.routers.portainer-webhooks.rule=Host(`portainer.$DOMAIN`) && (PathPrefix(`/api/stacks/portainer`)"
+      - "traefik.http.routers.portainer-webhooks.rule=Host(`portainer.$DOMAIN`) && PathPrefix(`/api/stacks/webhooks`)"
+      - "traefik.http.routers.portainer-webhooks.priority=2"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     networks:
       - network_traefik
