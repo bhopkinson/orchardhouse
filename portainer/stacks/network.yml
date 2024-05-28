@@ -135,6 +135,21 @@ services:
     networks:
       - traefik
 
+  traefik-socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: socket-proxy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      traefik_socket_proxy:
+    ports:
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - LOG_LEVEL=info
+      - CONTAINERS=1 # Traefik
+
 volumes:
   omada-data:
   omada-logs:
@@ -142,3 +157,4 @@ volumes:
 networks:
   traefik:
   cloudflared:
+  traefik_socket_proxy:
