@@ -9,7 +9,7 @@ services:
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--providers.docker=true"
-      - "--providers.docker.endpoint=tcp://network-socket-proxy:2375"
+      - "--providers.docker.endpoint=tcp://socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
       # Listeners
       # - "--entrypoints.web.address=:80"
@@ -51,7 +51,7 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      - DOCKER_HOST=tcp://network-socket-proxy:2375
+      - DOCKER_HOST=tcp://socket-proxy:2375
       - TIMEZONE=Europe/London
       - LOG_TYPE=CONSOLE
       - LOG_LEVEL=INFO
@@ -148,9 +148,9 @@ services:
     networks:
       - traefik
 
-  network-socket-proxy:
+  socket-proxy:
     image: tecnativa/docker-socket-proxy
-    container_name: network-socket-proxy
+    container_name: socket-proxy
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
