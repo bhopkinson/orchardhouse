@@ -1,16 +1,15 @@
-version: '3.3'
-
 services:
   portainer:
     image: portainer/portainer-ee:latest
     container_name: portainer
+    security_opt:
+      - no-new-privileges:true
     restart: always
     ports:
       - "8000:8000"
       - "9000:9000"
       - "9443:9443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     labels:
       - "traefik.enable=true"
@@ -22,11 +21,36 @@ services:
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     networks:
       - network_traefik
+      - socket_proxy
+    command: -H tcp://portainer-socket-proxy:2376
+
+  portainer-socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: portainer-socket-proxy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      socket_proxy:
+    ports:
+      - "127.0.0.1:2376:2375"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - LOG_LEVEL=info
+      - CONTAINERS=1
+      - IMAGES=1
+      - INFO=1
+      - NETWORKS=1
+      - SERVICES=1
+      - TASKS=1
+      - VOLUMES=1
 
 volumes:
   portainer_data:
     external: true
   
 networks:
+  socket_proxy:
   network_traefik:
     external: true
