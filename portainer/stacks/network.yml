@@ -30,6 +30,7 @@ services:
     networks:
       - traefik
       - cloudflared
+      - traefik_socket_proxy
 
   cloudflared:
     image: cloudflare/cloudflared
@@ -144,7 +145,7 @@ services:
     networks:
       traefik_socket_proxy:
     ports:
-      - "2375:2375"
+      - "127.0.0.1:2375:2375"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
