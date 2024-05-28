@@ -131,7 +131,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omada-controller.rule=Host(`omada.$DOMAIN`)"
-      - "traefik.http.services.omada-controller.loadbalancer.server.port=8088"
+      - "traefik.http.services.omada-controller.loadbalancer.server.port=8043"
     networks:
       - traefik
 
