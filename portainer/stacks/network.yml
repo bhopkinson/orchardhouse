@@ -20,8 +20,8 @@ services:
       - "80:80"
       - "8080:8080"
       - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - DOCKER_HOST=tcp://traefik-socket-proxy:2375
     labels:
        - "traefik.enable=true"
        - "traefik.http.routers.dashboard.rule=Host(`traefik.$DOMAIN`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
@@ -137,7 +137,7 @@ services:
 
   traefik-socket-proxy:
     image: tecnativa/docker-socket-proxy
-    container_name: socket-proxy
+    container_name: traefik-socket-proxy
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
