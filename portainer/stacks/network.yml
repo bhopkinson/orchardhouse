@@ -57,6 +57,8 @@ services:
       - DOMAIN1_ZONE_ID=${DOMAIN_CLOUDFLARE_ZONE_ID}
       - DOMAIN1_PROXIED=TRUE
     restart: unless-stopped
+    networks:
+      - socket_proxy
 
   traefik-forward-auth:
     container_name: traefik-forward-auth
