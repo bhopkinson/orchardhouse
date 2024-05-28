@@ -7,7 +7,7 @@ services:
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--providers.docker=true"
-      - "--providers.docker.endpoint=tcp://traefik-socket-proxy:2375"
+      - "--providers.docker.endpoint=tcp://network-socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
       # Listeners
       # - "--entrypoints.web.address=:80"
@@ -29,7 +29,7 @@ services:
     networks:
       - traefik
       - cloudflared
-      - traefik_socket_proxy
+      - socket_proxy
 
   cloudflared:
     image: cloudflare/cloudflared
@@ -44,9 +44,8 @@ services:
   cloudflare-companion:
     image: tiredofit/traefik-cloudflare-companion
     container_name: cloudflare-companion
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - DOCKER_HOST=tcp://network-socket-proxy:2375
       - TIMEZONE=Europe/London
       - LOG_TYPE=CONSOLE
       - LOG_LEVEL=INFO
@@ -135,21 +134,21 @@ services:
     networks:
       - traefik
 
-  traefik-socket-proxy:
+  network-socket-proxy:
     image: tecnativa/docker-socket-proxy
-    container_name: traefik-socket-proxy
+    container_name: network-socket-proxy
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
     networks:
-      traefik_socket_proxy:
+      socket_proxy:
     ports:
       - "127.0.0.1:2375:2375"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       - LOG_LEVEL=info
-      - CONTAINERS=1 # Traefik
+      - CONTAINERS=1 # traefik, cloudflare-companion
 
 volumes:
   omada-data:
@@ -158,4 +157,4 @@ volumes:
 networks:
   traefik:
   cloudflared:
-  traefik_socket_proxy:
+  socket_proxy:
