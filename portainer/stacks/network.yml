@@ -2,6 +2,8 @@ services:
   traefik:
     image: traefik:v3.0
     container_name: "traefik"
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     command:
       - "--log.level=DEBUG"
@@ -34,6 +36,8 @@ services:
   cloudflared:
     image: cloudflare/cloudflared
     container_name: cloudflared
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     command: tunnel run
     environment:
@@ -44,6 +48,8 @@ services:
   cloudflare-companion:
     image: tiredofit/traefik-cloudflare-companion
     container_name: cloudflare-companion
+    security_opt:
+      - no-new-privileges:true
     environment:
       - DOCKER_HOST=tcp://network-socket-proxy:2375
       - TIMEZONE=Europe/London
@@ -63,6 +69,8 @@ services:
   traefik-forward-auth:
     container_name: traefik-forward-auth
     image: thomseddon/traefik-forward-auth:latest
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - traefik
     networks:
@@ -89,6 +97,8 @@ services:
   omada-controller:
     image: mbentley/omada-controller:5.13
     container_name: "omada-controller"
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     environment:
       - MANAGE_HTTP_PORT=8088
@@ -128,6 +138,8 @@ services:
   whoami:
     image: "traefik/whoami"
     container_name: "whoami"
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
