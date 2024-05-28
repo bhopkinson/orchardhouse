@@ -7,6 +7,7 @@ services:
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--providers.docker=true"
+      - "--providers.docker.endpoint=tcp://traefik-socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
       # Listeners
       # - "--entrypoints.web.address=:80"
@@ -20,8 +21,6 @@ services:
       - "80:80"
       - "8080:8080"
       - "443:443"
-    environment:
-      - DOCKER_HOST=tcp://traefik-socket-proxy:2375
     labels:
        - "traefik.enable=true"
        - "traefik.http.routers.dashboard.rule=Host(`traefik.$DOMAIN`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
