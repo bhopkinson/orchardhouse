@@ -9,7 +9,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
       - "traefik.http.routers.whoami.middlewares=traefik-forward-auth"
-      - "traefik.http.routers.whoamilocal.rule=Host(`whoami.local`)"
+      # - "traefik.http.routers.whoamilocal.rule=Host(`whoami.local`)"
     networks:
       - network_traefik
 
@@ -19,6 +19,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
+    ports:
+      - "81:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mqttx.rule=Host(`mqttx.$DOMAIN`)"
