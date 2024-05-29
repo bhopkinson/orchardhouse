@@ -1,0 +1,30 @@
+services:
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami"
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.$DOMAIN`)"
+      - "traefik.http.routers.whoami.middlewares=traefik-forward-auth"
+    networks:
+      - network_traefik
+
+  mqttx:
+    image: "emqx/mqttx-web"
+    container_name: "mqttx"
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mqttx.rule=Host(`mqttx.$DOMAIN`)"
+      - "traefik.http.routers.mqttx.middlewares=traefik-forward-auth"
+    networks:
+      - network_traefik
+
+networks:
+  network_traefik:
+    external: true
