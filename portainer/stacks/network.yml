@@ -5,6 +5,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
+    depends_on:
+      - socket_proxy
     command:
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
@@ -50,6 +52,8 @@ services:
     container_name: cloudflare-companion
     security_opt:
       - no-new-privileges:true
+    depends_on:
+      - socket_proxy
     environment:
       - DOCKER_HOST=tcp://socket-proxy:2375
       - TIMEZONE=Europe/London
