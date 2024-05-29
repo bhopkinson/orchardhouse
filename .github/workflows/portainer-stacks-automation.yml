@@ -1,0 +1,20 @@
+name: portainer-stacks-network
+
+on:
+  push:
+    branches: [ "main" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+    paths:
+      - 'portainer/stacks/automation.yml'
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update portainer stack
+        uses: jasongitmail/fast-webhook@v1.1.4
+        with:
+          url: ${{ secrets.PORTAINER_STACK_AUTOMATION_WEBHOOK }}
