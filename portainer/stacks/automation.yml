@@ -10,7 +10,16 @@ services:
       - "5672:5672"
       - "15672:15672"
       - "15675:15675"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.$DOMAIN`)"
+      - "traefik.http.routers.rabbitmq.middlewares=traefik-forward-auth"
+      - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
+    networks:
+      - network_traefik
 
 networks:
   default:
     driver: bridge
+  network_traefik:
+    external: true
