@@ -131,6 +131,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omada-controller.rule=Host(`omada.$DOMAIN`)"
+      - "traefik.http.routers.omada-controller.middlewares=traefik-forward-auth"
       - "traefik.http.services.omada-controller.loadbalancer.server.port=8088"
     networks:
       - traefik
