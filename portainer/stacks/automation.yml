@@ -14,14 +14,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.$DOMAIN`)"
       - "traefik.http.routers.rabbitmq.middlewares=traefik-forward-auth"
-      - "traefik.http.routers.rabbitmq.service=rabbitmq"
-      - "traefik.http.routers.rabbitmq.priority=1"
       - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
-
-      - "traefik.http.routers.rabbitmq-ws.rule=Host(`rabbitmq.$DOMAIN`) && (PathPrefix(`/ws`))"
-      - "traefik.http.routers.rabbitmq-ws.service=rabbitmq-ws"
-      - "traefik.http.routers.rabbitmq-ws.priority=2"
-      - "traefik.http.services.rabbitmq-ws.loadbalancer.server.port=15675"
     networks:
       - network_traefik
 
