@@ -1,0 +1,20 @@
+name: portainer-stacks-home-assistant
+
+on:
+  push:
+    branches: [ "main" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+    paths:
+      - 'portainer/stacks/home-assistant.yml'
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update portainer stack
+        uses: eallion/fast-webhook@v1
+        with:
+          url: ${{ secrets.PORTAINER_STACK_HOMEASSISTANT_WEBHOOK }}

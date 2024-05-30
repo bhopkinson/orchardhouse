@@ -1,0 +1,27 @@
+services:
+  home-assistant:
+    image: "ghcr.io/home-assistant/home-assistant:2024.5.5"
+    container_name: home-assistant
+    volumes:
+      - config:/config
+      - /etc/localtime:/etc/localtime:ro
+      # - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    network_mode: host
+
+volumes:
+  config:
+
+networks:
+  ipvlan:
+    driver:
+      driver_opts:
+        parent: $NETWORK_INTERFACE
+    ipam:
+      config:
+      - subnet: $SUBNET
+        gateway: $GATEWAY
+  network_traefik:
+    external: true
