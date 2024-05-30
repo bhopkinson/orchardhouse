@@ -9,7 +9,9 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
-    network_mode: host
+    networks:
+      - ipvlan
+      - network_traefik
 
 volumes:
   config:
