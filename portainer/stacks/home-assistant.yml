@@ -16,7 +16,7 @@ volumes:
 
 networks:
   ipvlan:
-    driver:
+    driver: ipvlan
       driver_opts:
         parent: $NETWORK_INTERFACE
     ipam:
