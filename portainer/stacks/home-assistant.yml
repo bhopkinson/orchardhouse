@@ -11,18 +11,24 @@ services:
       - no-new-privileges
     ports:
       - "8123:8123"
+    networks:
+      - network_traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`home-assistant.$DOMAIN`)"
+      - "traefik.http.routers.whoami.middlewares=traefik-forward-auth"
 
 volumes:
   config:
 
-# networks:
-#   ipvlan:
-#     driver: ipvlan
-#     driver_opts:
-#       parent: $NETWORK_INTERFACE
-#     ipam:
-#       config:
-#       - subnet: $SUBNET
-#         gateway: $GATEWAY
-#   network_traefik:
-#     external: true
+networks:
+  # ipvlan:
+  #   driver: ipvlan
+  #   driver_opts:
+  #     parent: $NETWORK_INTERFACE
+  #   ipam:
+  #     config:
+  #     - subnet: $SUBNET
+  #       gateway: $GATEWAY
+  network_traefik:
+    external: true
