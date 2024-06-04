@@ -28,6 +28,21 @@ services:
     networks:
       - network_traefik
 
+  filebrowser:
+    image: "filebrowser/filebrowser:v2"
+    container_name: "filebrowser"
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    volumes:
+      - home-assistant_config:/srv/home-assistant:z
+    ports:
+      - 82:80
+
 networks:
   network_traefik:
+    external: true
+
+volumes:
+  home-assistant_config:
     external: true
