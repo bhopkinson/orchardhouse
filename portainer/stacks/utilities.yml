@@ -38,7 +38,6 @@ services:
       - FB_NOAUTH=true
     volumes:
       - home-assistant_config:/srv/home-assistant:z
-      - filebrowser:/database.db
     ports:
       - 82:80
     labels:
@@ -55,4 +54,3 @@ networks:
 volumes:
   home-assistant_config:
     external: true
-  filebrowser:
