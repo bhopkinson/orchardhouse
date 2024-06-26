@@ -40,7 +40,7 @@ services:
       - 82:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser.rule=Host('files.$DOMAIN')"
+      - "traefik.http.routers.filebrowser.rule=Host(`files.$DOMAIN`)"
       - "traefik.http.routers.filebrowser.middlewares=traefik-forward-auth"
     networks:
       - network_traefik
