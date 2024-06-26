@@ -34,7 +34,9 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    command: config set --auth.method=noauth
+    command:
+      - "config init"
+      - "config set --auth.method=noauth"
     volumes:
       - home-assistant_config:/srv/home-assistant:z
     ports:
