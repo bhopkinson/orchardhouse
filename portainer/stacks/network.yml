@@ -31,9 +31,10 @@ services:
        - "traefik.http.routers.dashboard.service=api@internal"
        - "traefik.http.routers.dashboard.middlewares=traefik-forward-auth"
     networks:
-      - traefik
-      - cloudflared
-      - socket_proxy
+      traefik:
+        ipv4_address: 172.25.0.254
+      cloudflared:
+      socket_proxy:
 
   cloudflared:
     image: cloudflare/cloudflared
@@ -162,5 +163,10 @@ volumes:
 
 networks:
   traefik:
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+          ip_range: 172.25.0.0/25
+          gateway: 172.25.0.1
   cloudflared:
   socket_proxy:
