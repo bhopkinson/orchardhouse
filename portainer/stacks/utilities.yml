@@ -47,6 +47,27 @@ services:
     networks:
       - network_traefik
 
+  vscode:
+    image: "lscr.io/linuxserver/code-server"
+    container_name: "vscode"
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    volumes:
+      - vscode_config:/config
+    ports:
+      - 8443:8443
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/GB
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.code.rule=Host(`code.$DOMAIN`)"
+      - "traefik.http.routers.code.middlewares=traefik-forward-auth"
+    networks:
+      - network_traefik  
+
 networks:
   network_traefik:
     external: true
@@ -54,3 +75,4 @@ networks:
 volumes:
   home-assistant_config:
     external: true
+  vscode_config:
