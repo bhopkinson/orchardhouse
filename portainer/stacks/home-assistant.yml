@@ -22,8 +22,35 @@ services:
       # - "traefik.http.routers.home-assistant-webhooks.priority=2"
       - "traefik.http.services.home-assistant.loadbalancer.server.port=8123"
 
+  influxdb:
+    image: influxdb:2
+    container_name: influxdb
+    volumes:
+      - influxdb-config:/etc/influxdb2
+      - influxdb-data:/var/lib/influxdb2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges
+    ports:
+      - 8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_ORG=Orchard House
+      - DOCKER_INFLUXDB_INIT_BUCKET=Home Assistant
+      - DOCKER_INFLUXDB_INIT_ADMIN_USERNAME=${INFLUXDB_USERNAME}
+      - DOCKER_INFLUXDB_INIT_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+    networks:
+      - network_traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.influxdb.rule=Host(`influxdb.$DOMAIN`)"
+      - "traefik.http.routers.influxdb.middlewares=traefik-forward-auth"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+
 volumes:
   config:
+  influxdb-config:
+  influxdb-data:
 
 networks:
   # ipvlan:
