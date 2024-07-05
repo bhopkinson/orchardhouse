@@ -16,10 +16,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home-assistant.rule=Host(`ha.$DOMAIN`)"
-      - "traefik.http.routers.home-assistant.priority=1"
-      - "traefik.http.routers.home-assistant.middlewares=traefik-forward-auth"
-      - "traefik.http.routers.home-assistant-webhooks.rule=Host(`ha.$DOMAIN`) && PathPrefix(`/api/webhook`)"
-      - "traefik.http.routers.home-assistant-webhooks.priority=2"
+      # - "traefik.http.routers.home-assistant.priority=1"
+      # - "traefik.http.routers.home-assistant.middlewares=traefik-forward-auth"
+      # - "traefik.http.routers.home-assistant-webhooks.rule=Host(`ha.$DOMAIN`) && PathPrefix(`/api/webhook`)"
+      # - "traefik.http.routers.home-assistant-webhooks.priority=2"
       - "traefik.http.services.home-assistant.loadbalancer.server.port=8123"
 
 volumes:
