@@ -3,6 +3,8 @@ services:
     image: ghcr.io/bhopkinson/orchardhouse-rabbitmq:main
     container_name: rabbitmq
     restart: unless-stopped
+    security_opt:  
+      - no-new-privileges
     env_file:
       - ../../stack.env
     ports:
@@ -22,6 +24,8 @@ services:
     image: docker.n8n.io/n8nio/n8n
     container_name: n8n
     restart: unless-stopped
+    security_opt:  
+      - no-new-privileges
     ports:
       - "5678:5678"
     labels:
@@ -33,6 +37,21 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
 
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    restart: unless-stopped
+    security_opt:  
+      - no-new-privileges
+    environment:
+      - TZ=Europe/London
+    ports:
+      - "1880:1880"
+    networks:
+      - network_traefik
+    volumes:
+      - node-red-data:/data
+
 networks:
   default:
     driver: bridge
@@ -41,3 +60,4 @@ networks:
 
 volumes:
   n8n_data:
+  node-red-data:
