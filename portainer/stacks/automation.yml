@@ -47,6 +47,10 @@ services:
       - TZ=Europe/London
     ports:
       - "1880:1880"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nodered.rule=Host(`nodered.$DOMAIN`)"
+      - "traefik.http.routers.nodered.middlewares=traefik-forward-auth"
     networks:
       - network_traefik
     volumes:
