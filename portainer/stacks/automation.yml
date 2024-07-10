@@ -54,7 +54,7 @@ services:
     networks:
       - network_traefik
     volumes:
-      - node-red-data:/data
+      - node-red-data:/data:z
 
 networks:
   default:

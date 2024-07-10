@@ -38,6 +38,7 @@ services:
       - FB_NOAUTH=true
     volumes:
       - home-assistant_config:/srv/home-assistant:z
+      - automation_node-red-data:/srv/node-red:z
     ports:
       - 82:80
     labels:
@@ -75,5 +76,7 @@ networks:
 
 volumes:
   home-assistant_config:
+    external: true
+  automation_node-red-data:
     external: true
   vscode_config:
