@@ -55,6 +55,7 @@ services:
       - network_traefik
     volumes:
       - node-red-data:/data:z
+      - home-assistant_config:/home-assistant:ro
 
 networks:
   default:
@@ -65,3 +66,5 @@ networks:
 volumes:
   n8n_data:
   node-red-data:
+  home-assistant_config:
+    external: true
