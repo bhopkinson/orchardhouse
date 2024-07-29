@@ -21,9 +21,8 @@ services:
       - "traefik.http.routers.home-assistant-webhooks.rule=Host(`ha.$DOMAIN`) && PathPrefix(`/api/webhook/$WEBHOOK_STR`)"
       - "traefik.http.routers.home-assistant-webhooks.priority=2"
       - "traefik.http.middlewares.home-assistant-webhooks.stripprefix.prefixes=/api/webhook/$WEBHOOK_STR"
-      - "traefik.http.routers.home-assistant-app.rule=Host(`ha.$DOMAIN`) && PathPrefix(`/app/$HAAPP_STR`)"
+      - "traefik.http.routers.home-assistant-app.rule=Host(`$HAAPP_STR.$DOMAIN`)"
       - "traefik.http.routers.home-assistant-app.priority=3"
-      - "traefik.http.middlewares.home-assistant-app.stripprefix.prefixes=/app/$HAAPP_STR"
       - "traefik.http.services.home-assistant.loadbalancer.server.port=8123"
 
   influxdb:
