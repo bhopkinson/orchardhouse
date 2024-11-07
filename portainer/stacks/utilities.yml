@@ -39,7 +39,7 @@ services:
     volumes:
       - home-assistant_config:/srv/home-assistant:z
       - automation_node-red-data:/srv/node-red:z
-      - automation_zigbee2mqtt-data:/zigbee2mqtt:z
+      - automation_zigbee2mqtt-data:/srv/zigbee2mqtt:z
     ports:
       - 82:80
     labels:
