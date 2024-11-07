@@ -57,6 +57,25 @@ services:
       - node-red-data:/data:z
       - home-assistant_config:/home-assistant:ro
 
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    volumes:
+      - zigbee2mqtt-data:/app/data:z
+      - /run/udev:/run/udev:ro
+    ports:
+      - 8081:8080
+    environment:
+      - TZ=Europe/London
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.$DOMAIN`)"
+      - "traefik.http.routers.zigbee2mqtt.middlewares=traefik-forward-auth"
+    networks:
+      - network_traefik
+
 networks:
   default:
     driver: bridge
@@ -66,5 +85,6 @@ networks:
 volumes:
   n8n_data:
   node-red-data:
+  zigbee2mqtt-data:
   home-assistant_config:
     external: true
