@@ -39,6 +39,7 @@ services:
     volumes:
       - home-assistant_config:/srv/home-assistant:z
       - automation_node-red-data:/srv/node-red:z
+      - automation_zigbee2mqtt-data:/zigbee2mqtt:z
     ports:
       - 82:80
     labels:
@@ -57,6 +58,7 @@ services:
     volumes:
       - vscode_config:/config
       - home-assistant_config:/home-assistant:z
+      - automation_zigbee2mqtt-data:/zigbee2mqtt:z
     ports:
       - 8443:8443
     environment:
@@ -78,5 +80,7 @@ volumes:
   home-assistant_config:
     external: true
   automation_node-red-data:
+    external: true
+  automation_zigbee2mqtt-data:
     external: true
   vscode_config:
