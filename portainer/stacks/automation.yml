@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     # security_opt:  
     #   - no-new-privileges
-    privileged: true
+    # privileged: true
     volumes:
       - zigbee2mqtt-data:/app/data:z
       - /run/udev:/run/udev:ro
