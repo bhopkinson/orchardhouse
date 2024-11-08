@@ -74,8 +74,8 @@ services:
       - TZ=Europe/London
     #device_cgroup_rules:
     #  - 'c 188:* rmw'
-    # devices:
-    #  - /dev/ttyUSB0:/dev/ttyUSB0
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.$DOMAIN`)"
