@@ -77,7 +77,8 @@ services:
     group_add:
       - dialout
     devices:
-      - /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/ttyUSB0
+      #- /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/ttyUSB0
+      - /dev/ttyUSB0:/dev/ttyUSB0
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.$DOMAIN`)"
