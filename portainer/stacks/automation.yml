@@ -78,7 +78,6 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
     group_add:
       - dialout
-    user: 1000:1000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.$DOMAIN`)"
