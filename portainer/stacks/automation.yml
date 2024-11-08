@@ -61,8 +61,8 @@ services:
     image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
     restart: unless-stopped
-    security_opt:  
-      - no-new-privileges
+    # security_opt:  
+    #   - no-new-privileges
     privileged: true
     volumes:
       - zigbee2mqtt-data:/app/data:z
