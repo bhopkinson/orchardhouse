@@ -34,11 +34,7 @@ Cloudflare's documentation recommends creating the Access application before pub
 
 ## Tunnel Routing And DNS
 
-The dashboard tunnel routes should be empty when using this local config. The routing rule now lives in `portainer/stacks/edge/cloudflared/config.yml`:
-
-```text
-all tunnel traffic -> http://traefik:80
-```
+The dashboard tunnel routes should be empty when using this local config. The routing rule lives inline in the Compose file as `cloudflared_config`, so it stays in Git and does not need a separate host-side config file.
 
 Because `cloudflared` and `traefik` share the `orchard_proxy` Docker network, `cloudflared` can route to the `traefik` service name directly. Traefik then chooses the final container from the hostname.
 

@@ -76,4 +76,6 @@ networks:
 
 configs:
   cloudflared_config:
-    file: ./cloudflared/config.yml
+    content: |
+      ingress:
+        - service: http://traefik:80
