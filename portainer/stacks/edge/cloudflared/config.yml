@@ -1,0 +1,2 @@
+ingress:
+  - service: http://traefik:80

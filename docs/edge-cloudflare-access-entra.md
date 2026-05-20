@@ -4,7 +4,7 @@ The edge stack does not run a local authentication service. Authentication is en
 
 ## What The Stack Does
 
-- `cloudflared` connects the Ubuntu host to your existing Cloudflare Tunnel.
+- `cloudflared` connects the Ubuntu host to Cloudflare using a locally-managed tunnel config.
 - `traefik` routes hostnames to containers on the internal Docker network.
 - `whoami` is the first test application.
 
@@ -26,23 +26,54 @@ In Cloudflare Zero Trust:
 Then create Access applications for the private hostnames:
 
 1. Go to `Access` -> `Applications`.
-2. Create a `Self-hosted` application for `whoami.<your-domain>`.
-3. Create another `Self-hosted` application for `traefik.<your-domain>`.
-4. Attach an `Allow` policy for your user or group.
-5. If Microsoft Entra ID is the only login method you want for these apps, turn on instant authentication.
+2. Create a `Self-hosted` application for `*.apps.<your-domain>`.
+3. Attach an `Allow` policy for your user or group.
+4. If Microsoft Entra ID is the only login method you want for these apps, turn on instant authentication.
 
 Cloudflare's documentation recommends creating the Access application before publishing the tunnel route so the hostname is not briefly exposed without an Access policy.
 
-## Tunnel Routing
+## Tunnel Routing And DNS
 
-Add these public hostnames to the existing Cloudflare Tunnel:
+The dashboard tunnel routes should be empty when using this local config. The routing rule now lives in `portainer/stacks/edge/cloudflared/config.yml`:
 
 ```text
-whoami.<your-domain>   -> http://traefik:80
-traefik.<your-domain>  -> http://traefik:80
+all tunnel traffic -> http://traefik:80
 ```
 
-Because `cloudflared` and `traefik` share the `orchard_proxy` Docker network, `cloudflared` can route to the `traefik` service name directly.
+Because `cloudflared` and `traefik` share the `orchard_proxy` Docker network, `cloudflared` can route to the `traefik` service name directly. Traefik then chooses the final container from the hostname.
+
+Create a wildcard DNS record in Cloudflare:
+
+```text
+Type: CNAME
+Name: *.apps
+Target: <tunnel-id>.cfargotunnel.com
+Proxy status: Proxied
+```
+
+The private test hostnames are:
+
+```text
+whoami.apps.<your-domain>
+traefik.apps.<your-domain>
+```
+
+## Tunnel Credentials
+
+This stack uses a locally-managed tunnel config, not the dashboard token command. The Ubuntu host must have the tunnel credentials JSON file at:
+
+```text
+/srv/orchardhouse/cloudflared/credentials.json
+```
+
+Set these Portainer environment variables:
+
+```text
+DOMAIN=<your-domain>
+CLOUDFLARE_TUNNEL_ID=<your-tunnel-uuid>
+```
+
+Do not commit the credentials JSON file to Git.
 
 ## Optional Hardening
 

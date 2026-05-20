@@ -33,7 +33,7 @@ services:
       - orchard_socket
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik.rule=Host(`traefik.apps.${DOMAIN}`)
       - traefik.http.routers.traefik.entrypoints=web
       - traefik.http.routers.traefik.service=api@internal
 
@@ -43,9 +43,15 @@ services:
     command:
       - tunnel
       - --no-autoupdate
+      - --config
+      - /etc/cloudflared/config.yml
+      - --credentials-file
+      - /etc/cloudflared/credentials.json
       - run
-      - --token
-      - ${CLOUDFLARE_TUNNEL_TOKEN}
+      - ${CLOUDFLARE_TUNNEL_ID}
+    volumes:
+      - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+      - /srv/orchardhouse/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro
     networks:
       - orchard_proxy
 
@@ -56,7 +62,7 @@ services:
       - orchard_proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)
+      - traefik.http.routers.whoami.rule=Host(`whoami.apps.${DOMAIN}`)
       - traefik.http.routers.whoami.entrypoints=web
       - traefik.http.services.whoami.loadbalancer.server.port=80
 
