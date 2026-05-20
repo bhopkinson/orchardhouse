@@ -26,9 +26,10 @@ In Cloudflare Zero Trust:
 Then create Access applications for the private hostnames:
 
 1. Go to `Access` -> `Applications`.
-2. Create a `Self-hosted` application for `*.apps.<your-domain>`.
+2. Create a `Self-hosted` application for `whoami.<your-domain>`.
 3. Attach an `Allow` policy for your user or group.
-4. If Microsoft Entra ID is the only login method you want for these apps, turn on instant authentication.
+4. Create another `Self-hosted` application for `traefik.<your-domain>` with the same policy.
+5. If Microsoft Entra ID is the only login method you want for these apps, turn on instant authentication.
 
 Cloudflare's documentation recommends creating the Access application before publishing the tunnel route so the hostname is not briefly exposed without an Access policy.
 
@@ -42,7 +43,7 @@ Create a wildcard DNS record in Cloudflare:
 
 ```text
 Type: CNAME
-Name: *.apps
+Name: *
 Target: <tunnel-id>.cfargotunnel.com
 Proxy status: Proxied
 ```
@@ -50,9 +51,33 @@ Proxy status: Proxied
 The private test hostnames are:
 
 ```text
-whoami.apps.<your-domain>
-traefik.apps.<your-domain>
+whoami.<your-domain>
+traefik.<your-domain>
 ```
+
+The wildcard DNS record covers one subdomain level, such as `whoami.<your-domain>`, `traefik.<your-domain>`, and later `ha.<your-domain>`. It does not cover the bare apex domain, `<your-domain>`.
+
+## Private And Public Hostnames
+
+The tunnel and Traefik can carry both private and public sites. Cloudflare Access decides which hostnames require login.
+
+For now, create exact Access applications for private hostnames only:
+
+```text
+whoami.<your-domain>
+traefik.<your-domain>
+```
+
+Do not create an Access application for future public hostnames such as:
+
+```text
+www.<your-domain>
+blog.<your-domain>
+```
+
+When a public website is added later, it will get its own Traefik router label for that hostname. Because there is no matching Cloudflare Access application, Cloudflare will send public visitors through the tunnel to Traefik without a login prompt.
+
+This exact-hostname approach is a little more manual than a single wildcard Access application, but it keeps early setup plain and avoids accidentally putting a public website behind login.
 
 ## Tunnel Credentials
 

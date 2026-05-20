@@ -33,7 +33,7 @@ services:
       - orchard_socket
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`traefik.apps.${DOMAIN}`)
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.traefik.entrypoints=web
       - traefik.http.routers.traefik.service=api@internal
 
@@ -64,7 +64,7 @@ services:
       - orchard_proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.apps.${DOMAIN}`)
+      - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)
       - traefik.http.routers.whoami.entrypoints=web
       - traefik.http.services.whoami.loadbalancer.server.port=80
 
