@@ -1,0 +1,24 @@
+name: portainer-stacks-edge
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "portainer/stacks/edge/**"
+      - ".github/workflows/portainer-stacks-edge.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Compose file
+        run: docker compose -f portainer/stacks/edge/compose.yml config >/dev/null
+
+      - name: Trigger Portainer redeploy
+        env:
+          PORTAINER_EDGE_WEBHOOK: ${{ secrets.PORTAINER_EDGE_WEBHOOK }}
+        run: curl --fail --show-error --silent -X POST "$PORTAINER_EDGE_WEBHOOK"
