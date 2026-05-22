@@ -21,4 +21,11 @@ jobs:
       - name: Trigger Portainer redeploy
         env:
           PORTAINER_EDGE_WEBHOOK: ${{ secrets.PORTAINER_EDGE_WEBHOOK }}
-        run: curl --fail --show-error --silent -X POST "$PORTAINER_EDGE_WEBHOOK"
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          curl --fail --show-error --silent \
+            --header "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+            --header "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+            --request POST \
+            "$PORTAINER_EDGE_WEBHOOK"

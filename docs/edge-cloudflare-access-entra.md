@@ -160,27 +160,34 @@ Then use the exact email or username Cloudflare reports in the Access policy.
 
 ## Cloudflare Access Applications
 
-Create exact Access applications for private hostnames only.
+Use a wildcard Access application while this homelab is private-first.
 
-For `whoami`:
+Create one self-hosted Access application:
 
 1. Go to `Access` -> `Applications`.
 2. Create a `Self-hosted` application.
 3. Set the hostname to:
 
 ```text
-whoami.<your-domain>
+*.orchardhouse.cc
 ```
 
 4. Add an `Allow` policy for the personal Microsoft account.
 5. Set the application to use only `Microsoft Personal OIDC`.
 6. Turn on instant authentication if this is the only login method.
 
-Repeat for Traefik:
+This means new one-level hostnames are private by default:
 
 ```text
-traefik.<your-domain>
+whoami.orchardhouse.cc
+traefik.orchardhouse.cc
+portainer.orchardhouse.cc
+ha.orchardhouse.cc
 ```
+
+That is convenient while rebuilding the homelab because new internal services do not need a separate Access application before they are protected.
+
+Use more specific Access applications for exceptions, such as machine webhooks or future public websites. Cloudflare path-specific applications can override the broader wildcard application when the hostname and path match.
 
 Cloudflare recommends creating the Access application before publishing the tunnel route so the hostname is not briefly exposed without an Access policy.
 
@@ -252,21 +259,24 @@ The same tunnel and Traefik instance can carry both private and public sites.
 
 Cloudflare Access decides which hostnames require login.
 
-Private hostnames should have Access applications:
+The current setup uses one wildcard Access application for private hostnames:
 
 ```text
-whoami.orchardhouse.cc
-traefik.orchardhouse.cc
+*.orchardhouse.cc
 ```
 
-Future public hostnames should not have Access applications unless they are meant to be private:
+This makes new apps private by default.
+
+Future public hostnames need an explicit exception, for example a more specific Access application with a `Bypass` policy:
 
 ```text
 www.orchardhouse.cc
 blog.orchardhouse.cc
 ```
 
-When a public website is added later, it will get its own Traefik router label for that hostname. Because there is no matching Cloudflare Access application, Cloudflare will send public visitors through the tunnel to Traefik without a login prompt.
+When a public website is added later, it will also get its own Traefik router label for that hostname.
+
+Portainer has extra notes because its frontend uses the wildcard human-login policy, while its GitOps webhook uses a more specific service-token policy. See `docs/portainer-tunnel-gitops.md`.
 
 ## Troubleshooting
 
@@ -290,10 +300,10 @@ If the `client_id` is different, the Access application is still using an old id
 
 Check:
 
-1. The `whoami.<your-domain>` Access app uses only `Microsoft Personal OIDC`.
-2. There is no old wildcard Access app, such as `*.your-domain`, matching the same hostname.
-3. The old tenant-based `Microsoft Entra ID` provider is disabled or deleted.
-4. The Microsoft app registration has `signInAudience` set to `AzureADandPersonalMicrosoftAccount`.
+1. The wildcard `*.orchardhouse.cc` Access app uses only `Microsoft Personal OIDC`.
+2. The old tenant-based `Microsoft Entra ID` provider is disabled or deleted.
+3. The Microsoft app registration has `signInAudience` set to `AzureADandPersonalMicrosoftAccount`.
+4. No more specific Access application is accidentally matching the same hostname or path with the wrong provider.
 
 ## Optional Hardening
 

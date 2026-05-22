@@ -3,11 +3,28 @@ services:
     container_name: portainer
     image: portainer/portainer-ee:lts
     restart: unless-stopped
+    command:
+      - -H
+      - unix:///var/run/docker.sock
+      - --http-enabled
+      - --trusted-origins
+      - portainer.${DOMAIN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     ports:
-      - "9443:9443"
+      - "127.0.0.1:9443:9443"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=portainer_network
+      - traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)
+      - traefik.http.routers.portainer.entrypoints=web
+      - traefik.http.routers.portainer.service=portainer
+      - traefik.http.routers.portainer-webhook.rule=Host(`portainer-webhook.${DOMAIN}`) && PathPrefix(`/api/stacks/webhooks/`)
+      - traefik.http.routers.portainer-webhook.entrypoints=web
+      - traefik.http.routers.portainer-webhook.priority=100
+      - traefik.http.routers.portainer-webhook.service=portainer
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
 
 volumes:
   portainer_data:

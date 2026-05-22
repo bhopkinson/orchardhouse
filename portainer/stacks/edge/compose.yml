@@ -31,6 +31,7 @@ services:
     networks:
       - orchard_proxy
       - orchard_socket
+      - portainer_network
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
@@ -73,6 +74,9 @@ networks:
     name: orchard_proxy
   orchard_socket:
     name: orchard_socket
+  portainer_network:
+    name: portainer_network
+    external: true
 
 configs:
   cloudflared_config:
