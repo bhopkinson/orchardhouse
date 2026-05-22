@@ -93,10 +93,10 @@ docker compose pull
 docker compose up -d
 ```
 
-The Portainer `--trusted-origins` value must be a full URL, including the scheme:
+The Portainer `--trusted-origins` value must be a full origin, including the scheme but with no trailing slash:
 
 ```text
-https://portainer.orchardhouse.cc/
+https://portainer.orchardhouse.cc
 ```
 
 The compose file binds Portainer's raw HTTPS port to localhost only:
@@ -112,6 +112,20 @@ That means Portainer should be reached through the tunnel at `https://portainer.
 After Portainer has been redeployed locally, redeploy the `edge` stack in Portainer.
 
 This attaches Traefik to the existing `portainer_network` network so Traefik can route to the Portainer container.
+
+Traefik must be attached to both `orchard_proxy` and `portainer_network`. On the Ubuntu host, this command should list `portainer_network`:
+
+```bash
+docker inspect edge-traefik-1 --format '{{range $name, $_ := .NetworkSettings.Networks}}{{println $name}}{{end}}'
+```
+
+If it does not, redeploy the `edge` stack from Git. As a temporary hot-fix only, you can connect the running container manually:
+
+```bash
+docker network connect portainer_network edge-traefik-1
+```
+
+The socket proxy also allows Docker `EVENTS` so Traefik notices when Portainer is recreated.
 
 ## Cloudflare Access For The Frontend
 
@@ -279,6 +293,37 @@ Push it to `main`, then check:
 2. Portainer shows the `edge` stack redeploying.
 3. `whoami.orchardhouse.cc` still works.
 4. `portainer.orchardhouse.cc` loads through Cloudflare Access.
+
+## Troubleshooting Portainer 504s
+
+If `https://portainer.orchardhouse.cc` shows a Cloudflare 504 but Portainer works locally, check these in order on the Ubuntu host.
+
+Confirm Portainer is on `portainer_network`:
+
+```bash
+docker inspect portainer --format '{{range $name, $_ := .NetworkSettings.Networks}}{{println $name}}{{end}}'
+```
+
+Confirm Traefik is also on `portainer_network`:
+
+```bash
+docker inspect edge-traefik-1 --format '{{range $name, $_ := .NetworkSettings.Networks}}{{println $name}}{{end}}'
+```
+
+Confirm Portainer started its internal HTTP listener:
+
+```bash
+docker logs portainer --tail 100
+```
+
+Look for:
+
+```text
+starting HTTP server
+bind_address=:9000
+```
+
+If Traefik is missing from `portainer_network`, redeploy the `edge` stack from Git. If Portainer is not listening on `:9000`, redeploy `bootstrap/portainer` so the `--http-enabled` flag is active.
 
 ## Why Not Put The Webhook Under The Same Hostname?
 

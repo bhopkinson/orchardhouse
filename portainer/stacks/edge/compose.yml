@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     environment:
       CONTAINERS: 1
+      EVENTS: 1
       NETWORKS: 1
       INFO: 1
     volumes:
