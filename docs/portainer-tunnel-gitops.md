@@ -93,6 +93,12 @@ docker compose pull
 docker compose up -d
 ```
 
+The Portainer `--trusted-origins` value must be a full URL, including the scheme:
+
+```text
+https://portainer.orchardhouse.cc/
+```
+
 The compose file binds Portainer's raw HTTPS port to localhost only:
 
 ```text
