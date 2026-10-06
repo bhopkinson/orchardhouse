@@ -61,4 +61,15 @@ volumes:
 
 configs:
   mcpproxy_config:
-    file: ./mcp_config.json
+    content: |
+      {
+        "listen": "0.0.0.0:8080",
+        "require_mcp_auth": true,
+        "enable_socket": false,
+        "enable_web_ui": true,
+        "quarantine_enabled": true,
+        "telemetry": {
+          "enabled": false
+        },
+        "mcpServers": []
+      }

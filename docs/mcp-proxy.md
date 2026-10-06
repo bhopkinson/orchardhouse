@@ -132,7 +132,7 @@ Trusting a broader range would let a container on `mcp_internal` spoof forwarded
 
 The state volume is mounted at `/root/.mcpproxy`. Do not move it. A different data directory is ignored and the process replaces the config, including the API key, on every boot.
 
-The seed file is copied only when that volume has no `mcp_config.json` yet. Later edits in the web UI persist on the volume and are not overwritten by a redeploy.
+The seed config is inline in the Compose file. It is copied only when that volume has no `mcp_config.json` yet. Later edits in the web UI persist on the volume and are not overwritten by a redeploy.
 
 ## GitHub Actions
 
