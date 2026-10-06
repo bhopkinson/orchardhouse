@@ -12,9 +12,9 @@ services:
         if [ ! -f /root/.mcpproxy/mcp_config.json ]; then
           cp /seed/mcp_config.json /root/.mcpproxy/mcp_config.json
         fi
-        chown -R 65532:65532 /root/.mcpproxy
-        chmod 0750 /root/.mcpproxy
-        chmod 0640 /root/.mcpproxy/mcp_config.json
+        chown -R 0:0 /root/.mcpproxy
+        chmod 0700 /root/.mcpproxy
+        chmod 0600 /root/.mcpproxy/mcp_config.json
     volumes:
       - mcpproxy_data:/root/.mcpproxy
     configs:
