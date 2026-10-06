@@ -1,0 +1,64 @@
+services:
+  mcpproxy-init:
+    image: busybox:1.37.0
+    user: "0:0"
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - sh
+      - -c
+      - |
+        if [ ! -f /root/.mcpproxy/mcp_config.json ]; then
+          cp /seed/mcp_config.json /root/.mcpproxy/mcp_config.json
+        fi
+        chown -R 65532:65532 /root/.mcpproxy
+        chmod 0750 /root/.mcpproxy
+        chmod 0640 /root/.mcpproxy/mcp_config.json
+    volumes:
+      - mcpproxy_data:/root/.mcpproxy
+    configs:
+      - source: mcpproxy_config
+        target: /seed/mcp_config.json
+    networks:
+      - mcp_internal
+
+  mcpproxy:
+    image: ghcr.io/smart-mcp-proxy/mcpproxy-server:v0.70.0
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      mcpproxy-init:
+        condition: service_completed_successfully
+    environment:
+      - MCPPROXY_API_KEY=${MCPPROXY_API_KEY}
+      - MCPPROXY_TRUSTED_PROXIES=${MCPPROXY_TRUSTED_PROXIES}
+      - MCPPROXY_TELEMETRY=false
+      - MCPPROXY_PUBLIC_URL=https://mcp.${DOMAIN}
+    volumes:
+      - mcpproxy_data:/root/.mcpproxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=orchard_proxy
+      - traefik.http.routers.mcpproxy.rule=Host(`mcp.${DOMAIN}`)
+      - traefik.http.routers.mcpproxy.entrypoints=web
+      - traefik.http.services.mcpproxy.loadbalancer.server.port=8080
+    networks:
+      - orchard_proxy
+      - mcp_internal
+
+networks:
+  orchard_proxy:
+    name: orchard_proxy
+    external: true
+  mcp_internal:
+    name: mcp_internal
+
+volumes:
+  mcpproxy_data:
+    name: mcpproxy_data
+
+configs:
+  mcpproxy_config:
+    file: ./mcp_config.json
