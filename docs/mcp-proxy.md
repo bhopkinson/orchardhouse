@@ -80,7 +80,7 @@ Do not create a normal Allow policy on this application.
 
 Cloudflare Access admits the request. mcpproxy then requires its own credential. The seed config sets `require_mcp_auth` to `true` before the first boot. Leave that on. With it off, anyone who reaches the origin can call the configured tools.
 
-The admin API key is for the web UI. Create MCP client credentials in the mcpproxy Clients hub. Those `mcp_cli_` credentials are valid on MCP endpoints only. Do not put the admin API key in Cursor or any other MCP client.
+Traefik adds the admin API key on browser routes, so the web UI does not ask for it. That header is not added on `/mcp`. Create MCP client credentials in the mcpproxy Clients hub. Those `mcp_cli_` credentials are valid on MCP endpoints only. Do not put the admin API key in Cursor or any other MCP client.
 
 A client calls:
 
@@ -120,7 +120,7 @@ MCPPROXY_API_KEY=<openssl rand -hex 32>
 MCPPROXY_TRUSTED_PROXIES=<orchard_proxy subnet>
 ```
 
-`MCPPROXY_API_KEY` is the web UI admin key. Keep a copy. The image is distroless, so an auto-generated key is awkward to read back out of the container.
+`MCPPROXY_API_KEY` stays in the stack environment. Traefik adds it to browser requests. Keep a copy. The image is distroless, so an auto-generated key is awkward to read back out of the container.
 
 `MCPPROXY_TRUSTED_PROXIES` must be the `orchard_proxy` subnet and nothing wider. On the Docker host:
 

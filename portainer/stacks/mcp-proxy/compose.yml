@@ -41,9 +41,18 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=orchard_proxy
-      - traefik.http.routers.mcpproxy.rule=Host(`mcp.${DOMAIN}`)
+      # Browser routes already passed Cloudflare Access. Traefik adds the
+      # admin key so the UI does not ask for it. /mcp does not get that key.
+      - traefik.http.routers.mcpproxy.rule=Host(`mcp.${DOMAIN}`) && !PathPrefix(`/mcp`)
       - traefik.http.routers.mcpproxy.entrypoints=web
+      - traefik.http.routers.mcpproxy.priority=10
+      - traefik.http.routers.mcpproxy.middlewares=mcpproxy-apikey
       - traefik.http.services.mcpproxy.loadbalancer.server.port=8080
+      - traefik.http.middlewares.mcpproxy-apikey.headers.customrequestheaders.X-API-Key=${MCPPROXY_API_KEY}
+      - traefik.http.routers.mcpproxy-mcp.rule=Host(`mcp.${DOMAIN}`) && PathPrefix(`/mcp`)
+      - traefik.http.routers.mcpproxy-mcp.entrypoints=web
+      - traefik.http.routers.mcpproxy-mcp.priority=100
+      - traefik.http.routers.mcpproxy-mcp.service=mcpproxy
     networks:
       - orchard_proxy
       - mcp_internal
